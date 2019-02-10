@@ -10,7 +10,7 @@ private _is_locked = {
 };
 
 if (call _is_locked) then {
-	waitUntil {sleep 0.1; not call is_locked};
+	waitUntil {sleep 0.1; not call _is_locked};
 };
 _box setVariable ["AS_lockedCargo", true, true];
 
