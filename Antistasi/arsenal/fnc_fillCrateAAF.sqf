@@ -68,8 +68,9 @@ _fnc_gear = {
 	};
 
 	if (_cat == "mine") exitWith {
+        private _mines = (["AAF", "ap_mines"] call AS_fnc_getEntity) + (["AAF", "at_mines"] call AS_fnc_getEntity);
 		for "_i" from 0 to _typeInt do {
-			_item = (selectRandom AAFmines) call AS_fnc_mineMag;
+			_item = (selectRandom _mines) call AS_fnc_mineMag;
 			_crate addMagazineCargoGlobal [_item, _classInt];
 		};
 	};
@@ -94,7 +95,7 @@ call {
 	};
 
 	if (_type == "AA") exitWith {
-		_item = genAALaunchers call BIS_Fnc_selectRandom;
+		_item = selectRandom AAFLaunchers;
 		_crate addWeaponCargoGlobal [_item, 5];
 		_crate addMagazineCargoGlobal [([_item] call _getWeaponMags) select 0, 10];
 	};
@@ -102,20 +103,17 @@ call {
 
 _items = [] call AS_medical_fnc_crateMeds;
 
-_items pushBack [indNVG, 2];
-_items pushBack ["ItemGPS", 5];
-
-if (!hayTFAR) then {
-	_items pushBack ["ItemRadio", 5];
-} else {
-	if (4 < random 5) then {
-		_items pushBack [lrRadio,1];
-	};
-};
+_items pushBack [selectRandom (AAFItems arrayIntersect AS_allNVGs), 2];
 
 for "_i" from 0 to count _items - 1 do {
 	private _name = (_items select _i) select 0;
 	private _amount = (_items select _i) select 1;
 
     _crate addItemCargoGlobal [_name, _amount];
+};
+
+if hasTFAR then {
+    if (1 < floor random 2) then {
+        _crate addBackpackCargoGlobal [(["AAF", "tfar_lr_radio"] call AS_fnc_getEntity), 1];
+    };
 };
